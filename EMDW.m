@@ -28,13 +28,11 @@ while IsMonotonic==0
         pp=csape(MinPosition,MinValue,'variational');
         DownEnvelope=ppval(pp,t);
         m=(UpEnvelope+DownEnvelope)./2;
+        prevh=h;
         h=h-m;
-        [MaxPosition MaxValue NumMax MinPosition MinValue NumMin]=LocalMaxMin(h);
-        pp=csape(MaxPosition,MaxValue,'variational');
-        UpEnvelope=ppval(pp,t);
-        pp=csape(MinPosition,MinValue,'variational');
-        DownEnvelope=ppval(pp,t);
-        if (((NumMax(2)+NumMin(2)<=2) && NumMax(3)==0 && NumMin(1)==0) || (NumMax(2)+NumMin(2)==0 && NumMax(3)==1 && NumMin(1)==0) || (NumMax(2)+NumMin(2)==0 && NumMax(3)==0 && NumMin(1)==1)) && ~any(((UpEnvelope+DownEnvelope)./2)>thread) && ~any(((UpEnvelope+DownEnvelope)./2)<-thread)
+        eps = 0.0000001;
+        SD = sum ( ((prevh - h).^2) ./ (prevh.^2 + eps) );
+        if SD<=thread
             IsIMF=1;
         end
     end
