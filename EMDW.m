@@ -1,7 +1,7 @@
-function [C R] = EMD( s, step, thread )
+function [C R] = EMDW( s, step, thread )
 % Calculate the EMD of s
 %
-% [C R] = EMD( s, step, thread )
+% [C R] = EMDW( s, step, thread )
 %
 %Input:
 %   s: input signal
@@ -18,9 +18,9 @@ t=1:L;
 n=0;
 C=[];
 R=[];
-h=s;
 while IsMonotonic==0
     n=n+1;
+    h=s;
     while IsIMF==0
         [MaxPosition MaxValue NumMax MinPosition MinValue NumMin]=LocalMaxMin(h);
         pp=csape(MaxPosition,MaxValue,'variational');
@@ -34,7 +34,7 @@ while IsMonotonic==0
         UpEnvelope=ppval(pp,t);
         pp=csape(MinPosition,MinValue,'variational');
         DownEnvelope=ppval(pp,t);
-        if NumMax(2)+NumMin(2)<=2 && NumMax(3)==0 && NumMin(1)==0 && ~any(((UpEnvelope+DownEnvelope)./2)>thread) && ~any(((UpEnvelope+DownEnvelope)./2)<-thread)
+        if (((NumMax(2)+NumMin(2)<=2) && NumMax(3)==0 && NumMin(1)==0) || (NumMax(2)+NumMin(2)==0 && NumMax(3)==1 && NumMin(1)==0) || (NumMax(2)+NumMin(2)==0 && NumMax(3)==0 && NumMin(1)==1)) && ~any(((UpEnvelope+DownEnvelope)./2)>thread) && ~any(((UpEnvelope+DownEnvelope)./2)<-thread)
             IsIMF=1;
         end
     end
@@ -45,7 +45,6 @@ while IsMonotonic==0
     if (isempty(MaxValue) && isempty(MinValue)) || n>=step
         IsMonotonic=1;
     end
-    h=s;
 end
             
 end
