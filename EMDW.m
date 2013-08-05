@@ -1,26 +1,31 @@
-function [C R] = EMDW( s, step, thread )
+function [C,R] = EMDW( s, step, thread )
 % Calculate the EMD of s
 %
-% [C R] = EMDW( s, step, thread )
+% [C,R] = EMDW( s, step, thread )
 %
 %Input:
 %   s: input signal
-%   step: maximum step
-%   thread: use to determine IMF
+%   step: maximum step, default value is 10
+%   thread: use to determine IMF, default value is 0.3
 %Output:
 %   C are IMF components
-%   R=s-c
 
-IsIMF=0;
+if nargin==1
+    step=10;
+    thread=0.3;
+elseif nargin==2
+    thread=0.3;
+end
+
 IsMonotonic=0;
 L=length(s);
 t=1:L;
 n=0;
 C=[];
-R=[];
 while IsMonotonic==0
     n=n+1;
     h=s;
+    IsIMF=0;
     while IsIMF==0
         [MaxPosition MaxValue NumMax MinPosition MinValue NumMin]=LocalMaxMin(h);
         pp=csape(MaxPosition,MaxValue,'variational');
@@ -37,13 +42,13 @@ while IsMonotonic==0
         end
     end
     s=s-h;
-    R(n,:)=s;
     C(n,:)=h;
     [MaxPosition MaxValue NumMax MinPosition MinValue NumMin]=LocalMaxMin(s);
-    if (isempty(MaxValue) && isempty(MinValue)) || n>=step
+    if sum(NumMax)==0 || sum(NumMin)==0 || n>=step
         IsMonotonic=1;
     end
 end
-            
+
+R=s;
 end
 

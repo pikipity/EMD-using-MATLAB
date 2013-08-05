@@ -136,5 +136,20 @@ if StartPosition~=0
     end
 end
 end
+
+if x(1)-x(2)>0
+    MaxPosition=[1 MaxPosition];
+    LocalMaximum=[x(1) LocalMaximum];
+else
+    MinPosition=[1 MinPosition length(x)];
+    LocalMinimum=[x(1) LocalMinimum x(length(x))];
+end
+if x(length(x))-x(length(x)-1)>0
+    MaxPosition=[MaxPosition length(x)];
+    LocalMaximum=[LocalMaximum x(length(x))];
+else
+    MinPosition=[MinPosition length(x)];
+    LocalMinimum=[LocalMinimum x(length(x))];
+end
 end
 
