@@ -6,3 +6,5 @@
 ***此坑将弃，不定时更新***
 
 更好的 EMD MATLAB 函数请看[这里](http://perso.ens-lyon.fr/patrick.flandrin/emd.html)。
+
+[另外一个更加短小，但是效果也是很不错的 EMD MATLAB 程序](https://github.com/daochenghaike/EMD.git)
